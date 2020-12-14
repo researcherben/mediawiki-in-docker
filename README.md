@@ -1,2 +1,3 @@
-# mediawiki-in-docker
-mediawiki
+# yet another MediaWiki in Docker
+
+

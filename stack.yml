@@ -1,0 +1,45 @@
+# MediaWiki with MariaDB
+
+# docker-compose --file stack.yml  up --force-recreate
+#
+# Access via "http://localhost:8080"
+#   (or "http://$(docker-machine ip):8080" if using docker-machine)
+version: '3'
+services:
+  mediawiki_with_smw:
+    # On Linux, these lines ensure file ownership is set to your host user/group
+    # the MW_DOCKER_* come from the .env file
+#    user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
+    # the default "mediawiki" image works but does not include desired extentions (e.g., SMW)
+#    image: mediawiki
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    restart: unless-stopped 
+    ports:
+      - 8080:80
+    links:
+      - database
+    volumes:
+      - ./images:/var/www/html/images
+      - ./composer.local.json:/var/www/html/composer.local.json
+      # After initial setup, download LocalSettings.php to the same directory as
+      # this yaml and uncomment the following line and use compose to restart
+      # the mediawiki service
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+  database:
+    image: mariadb
+    restart: unless-stopped
+    expose:
+      - "3306"
+    environment:
+      # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
+      MYSQL_DATABASE: my_wiki
+      MYSQL_USER: wikiuser
+      MYSQL_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: mysecret
+      #MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - ./db:/var/lib/mysql
