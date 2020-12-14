@@ -1,0 +1,2 @@
+# mediawiki-in-docker
+mediawiki
