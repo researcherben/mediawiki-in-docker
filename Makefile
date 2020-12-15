@@ -12,11 +12,15 @@ first-compose:
 build_mediawiki:
 	docker build -t mediawiki_with_smw .
 
+# step 3
 update_php:
-	docker-compose --file stack.yml  up --force-recreate
+	cp LocalSettings.php LocalSettings.php_without_smw
+	echo "enableSemantics('localhost');" >> LocalSettings.php
+	docker-compose --file stack.yml  up --force-recreate -d
 	container_id = `docker ps | grep mediawiki_with_smw | cut -d' ' -f1`
 	docker exec -it $(container_id) php /var/www/html/maintenance/update.php
 
+# all subsequent launches
 compose:
 	docker-compose --file stack.yml  up --force-recreate
 
