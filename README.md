@@ -78,6 +78,19 @@ and then create a new Template for `units_area` with the content
 
 Now if you revisit the page http://localhost:8080/index.php/My_house the `43 m^2` should not be a broken hyperlink. 
 
+The RDFS can be exported using http://localhost:8080/index.php/Special:ExportRDF 
+
+    <rdf:RDF>
+      <swivt:Subject rdf:about="http://localhost/index.php/Special:URIResolver/My_house">
+        <rdf:type rdf:resource="http://localhost/index.php/Special:URIResolver/Category-3AHouses"/>
+        <rdfs:label>My house</rdfs:label>
+        <property:Has_area rdf:datatype="http://www.w3.org/2001/XMLSchema#double">43</property:Has_area>
+        <property:Is_member_of rdf:datatype="http://www.w3.org/2001/XMLSchema#string">my neighborhood</property:Is_member_of>
+      </swivt:Subject>
+    </rdf:RDF>
+
+For more guidance see https://www.semantic-mediawiki.org/wiki/Help:RDF_export
+
 ## queries
 
 In a MW page, add the code to 1) collect all "houses" pages, then create a sortable table that includes columns for area and color
