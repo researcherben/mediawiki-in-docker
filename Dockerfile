@@ -20,10 +20,10 @@ RUN composer update --no-dev
 # alternatively, install semantic mediawiki without a file
 #RUN php composer.phar require mediawiki/semantic-media-wiki "~3.2" --update-no-dev
 
-WORKDIR /var/www/html
-COPY LocalSettings.php .
+#WORKDIR /var/www/html
+#COPY LocalSettings.php .
 
-RUN echo "enableSemantics('localhost');" >> /var/www/html/LocalSettings.php
+#RUN echo "enableSemantics('localhost');" >> /var/www/html/LocalSettings.php
 
 # problem: the following command depends on /var/www/html/db
 # which is normally mounted from the host but isn't available during "docker build"
