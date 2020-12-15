@@ -24,7 +24,6 @@ services:
       - database
     volumes:
       - ./images:/var/www/html/images
-      - ./composer.local.json:/var/www/html/composer.local.json
       # After initial setup, download LocalSettings.php to the same directory as
       # this yaml and uncomment the following line and use compose to restart
       # the mediawiki service
