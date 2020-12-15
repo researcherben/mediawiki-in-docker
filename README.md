@@ -1,18 +1,13 @@
 # yet another MediaWiki in Docker
 
-This repo documents how to get Semantic MediaWiki in Docker.
+This repo documents how to get Semantic MediaWiki in Docker, and what to do with SMW.
 
-For offline installation of SMW, see
-https://github.com/SemanticMediaWiki/IndividualFileRelease
-and
-https://www.semantic-mediawiki.org/wiki/Help:Installation/Using_Tarball_(without_shell_access)
-
-# CSS and JS
-
-https://en.wikipedia.org/wiki/MediaWiki:Common.css
-https://en.wikipedia.org/wiki/MediaWiki:Common.js
+If MediaWiki is a graph where pages are nodes and hyperlinks are edges, then
+SMW is a property graph where nodes (pages = entities) can have properties. 
 
 # what to do in SMW
+
+Now that you have Semantic MediaWiki (SMW) running, what can you do with it?
 
 ## use properties
 1. create content on a page that has a property, e.g., `[[Has capital::Berlin]]`
@@ -48,7 +43,50 @@ what about temperatures?
 
 ## use queries
 
+Once a page has properties, these properties can be queried (using `ask` or `show`) and the results displayed inline.
+
 `{{#show: Main_Page |limit=1 |?Has x_length  }}`
+
+## an example of SMW
+
+Create a new page with the content
+
+    [[my house]] is in [[my neighborhood]] which is part of [[best city]] and exists in [[this state]]
+
+On the `my house` page http://localhost:8080/index.php/My_house specify the category and a property:
+
+    [[Category:houses]]
+    [[Has area::43 m^2]]
+
+Populate the `Category:houses` page with
+
+    is a type of [[Subcategory of::building]]
+
+Also, we need to populate a new property `Has area` as well as a new unit `m^2`.  
+Find the `Has area` property by first going to http://localhost:8080/index.php/Special:SpecialPages
+and then locating `Has area` on http://localhost:8080/index.php/Special:Properties
+
+On the http://localhost:8080/index.php/Property:Has_area page add
+
+    [[Has type::Quantity]]
+    {{units_area}}
+
+and then create a new Template for `units_area` with the content
+
+    [[Corresponds to::1 m^2, meter^2, meters^2]] = <Br>
+    [[Corresponds to::10.7639 feet^2]]
+
+Now if you revisit the page http://localhost:8080/index.php/My_house the `43 m^2` should not be a broken hyperlink. 
+
+## queries
+
+In a MW page, add the code to 1) collect all "houses" pages, then create a sortable table that includes columns for area and color
+
+    {{#ask:
+     [[Category:Houses]]
+    |?Has area
+    |?Has color
+    }}
 
 # infobox
 
@@ -119,15 +157,47 @@ This creates an HTML `<table class="myinfobox">` which can then be styled using 
 
 Edit the page http://localhost:8080/index.php/MediaWiki:Common.css with
 
-.myinfobox {
-background-color: #ffff00;
-border: 2px solid #008600;
-float: right;
-margin: 0 0 1em 1em;
-padding: 1em;
-width: 400px;
-}     
+    .myinfobox {
+    background-color: #ffff00;
+    border: 2px solid #008600;
+    float: right;
+    margin: 0 0 1em 1em;
+    padding: 1em;
+    width: 400px;
+    }     
 
-Pro-tip: use SMW's show to reference values from pages when populating the infobox
+*Pro-tip*: use SMW's `show` to reference values from pages when populating the infobox
+
+    {{game
+      |title=Half-Life
+      |date={{#show: Main_Page |?Has start date }}
+      |genre=FPS
+      |mode=Single-Player}}
+
+
+
+
+# MediaWiki markup
+
+https://en.wikipedia.org/wiki/MediaWiki:Common.css  
+https://en.wikipedia.org/wiki/MediaWiki:Common.js
+
+# SMW resources
+
+https://www.semantic-mediawiki.org/wiki/Help:Special_properties
+https://www.semantic-mediawiki.org/wiki/Help:Type_Record/Using_a_record
+https://www.semantic-mediawiki.org/wiki/Help:Property_chains_and_paths
+https://www.semantic-mediawiki.org/wiki/Help:Inferencing
+
+# external resources
+
+OWL to SMW:  
+"Generating Semantic Media Wiki Content from Domain Ontologies" by Dominik Filipiak  
+http://ceur-ws.org/Vol-1275/swcs2014_submission_5.pdf
+
+## offline installation of SMW
+https://github.com/SemanticMediaWiki/IndividualFileRelease  
+and
+https://www.semantic-mediawiki.org/wiki/Help:Installation/Using_Tarball_(without_shell_access)
 
 
