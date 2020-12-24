@@ -12,9 +12,10 @@ services:
 #    user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
     # the default "mediawiki" image works but does not include desired extentions (e.g., SMW)
 #    image: mediawiki
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mediawiki_smw
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
     depends_on:
       - database
     restart: unless-stopped 

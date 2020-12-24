@@ -1,19 +1,26 @@
 
+.PHONY: help
+help:
+	@echo "make help"
+	@echo "      this message"
+	@echo "==== Targets outside container ===="
+	@echo "make build_mediawiki"
+
 
 # step 1
-first-compose:
+build_mediawiki:
+	docker build -t mediawiki_with_smw .
+
+# step 2
+first_compose: build_mediawiki
 	mkdir db
 	mkdir images
 	cat stack.yml | sed 's/.*\.\/LocalSettings.php.*//g'  > stack_new.yml
 	docker-compose --file stack_new.yml  up --force-recreate
 	rm stack_new.yml
 
-# step 2
-build_mediawiki:
-	docker build -t mediawiki_with_smw .
-
 # step 3
-update_php:
+update_php: first_compose
 	cp LocalSettings.php LocalSettings.php_without_smw
 	echo "enableSemantics('localhost');" >> LocalSettings.php
 	docker-compose --file stack.yml  up --force-recreate -d
@@ -23,6 +30,13 @@ update_php:
 # all subsequent launches
 compose:
 	docker-compose --file stack.yml  up --force-recreate
+
+# after exporting the container to an image, you'll
+# need to revise stack.yml to reflect the new image name
+commit_container_to_image:
+	container_id = `docker ps | grep mediawiki_with_smw | cut -d' ' -f1`
+	docker commit $(container_id) mediawiki_smw
+
 
 clean:
 	rm -rf db images
