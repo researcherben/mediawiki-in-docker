@@ -129,4 +129,7 @@ wfLoadSkin( 'Vector' );
 # End of automatically generated settings.
 # Add more configuration options below.
 
+# require_once "/var/www/html/extensions/SemanticMediaWiki/SemanticMediaWiki.php";
+#enableSemantics( 'localhost' );
 
+# $wgGroupPermissions['smwadministrator']['smw-admin'] = true;
