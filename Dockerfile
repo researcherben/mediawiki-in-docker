@@ -12,7 +12,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # once Compose is installed, create a file the specifies the desired packages
 # update mediawiki extensions via composer
-RUN echo "{\n\"require\": {\n\"mediawiki/semantic-media-wiki\": \"~3.2\"\n}\n}" > /var/www/html/composer.local.json 
+RUN echo "{\n\"require\": {\n\"mediawiki/semantic-media-wiki\": \"~3.2\"\n}\n}" > /var/www/html/composer.local.json
 # then run Composer to get the package
 RUN composer update --no-dev
 
@@ -28,20 +28,3 @@ RUN composer update --no-dev
 # problem: the following command depends on /var/www/html/db
 # which is normally mounted from the host but isn't available during "docker build"
 #RUN php /var/www/html/maintenance/update.php
-
-# OLD
-# try to install from source
-
-# https://gerrit.wikimedia.org/r/admin/repos/mediawiki/extensions/SemanticDrilldown
-#WORKDIR /var/www/html/extensions/
-#RUN git clone "https://gerrit.wikimedia.org/r/mediawiki/extensions/SemanticDrilldown" \
-#     /var/www/html/extensions/SemanticDrilldown
-
-# https://github.com/SemanticMediaWiki/SemanticCite
-#RUN git clone "https://github.com/SemanticMediaWiki/SemanticCite.git" \
-#     /var/www/html/extensions/SemanticCite
-
-# https://github.com/SemanticMediaWiki/SemanticMediaWiki
-#RUN git clone "https://github.com/SemanticMediaWiki/SemanticMediaWiki.git" \
-#     /var/www/html/extensions/SemanticMediaWiki
-

@@ -1,0 +1,65 @@
+$ docker build -t mediawiki_with_smw .
+Sending build context to Docker daemon  1.183MB
+Step 1/6 : FROM mediawiki:latest
+ ---> da445eee6e90
+Step 2/6 : RUN apt-get update && apt-get install -y     vim unzip libzip-dev
+ ---> Using cache
+ ---> 6b741885e2fe
+Step 3/6 : RUN docker-php-ext-install zip
+ ---> Using cache
+ ---> d061d93d2df7
+Step 4/6 : RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.16
+ ---> Using cache
+ ---> f623cc58a86d
+Step 5/6 : RUN echo "{\n\"require\": {\n\"mediawiki/semantic-media-wiki\": \"~3.2\"\n}\n}" > /var/www/html/composer.local.json
+ ---> Running in f7e7e2cbe531
+Removing intermediate container f7e7e2cbe531
+ ---> 5b06f2791021
+Step 6/6 : RUN composer update --no-dev
+ ---> Running in 40d7666827a3
+> ComposerHookHandler::onPreUpdate
+Loading composer repositories with package information
+Updating dependencies
+Package operations: 26 installs, 3 updates, 2 removals
+  - Removing jakobo/hotp-php (v1.0.1)
+  - Removing christian-riesen/base32 (1.3.2)
+  - Installing composer/installers (v1.9.0): Downloading (100%)
+  - Updating guzzlehttp/promises (v1.3.1 => 1.4.0): Downloading (100%)
+  - Updating guzzlehttp/psr7 (1.6.1 => 1.7.0): Downloading (100%)
+  - Updating wikimedia/wikipeg (2.0.4 => 2.0.5): Downloading (100%)
+  - Installing symfony/polyfill-php72 (v1.20.0): Downloading (100%)
+  - Installing justinrainbow/json-schema (5.2.10): Downloading (100%)
+  - Installing seld/jsonlint (1.7.1): Downloading (100%)
+  - Installing react/promise (v2.8.0): Downloading (100%)
+  - Installing guzzlehttp/streams (3.0.0): Downloading (100%)
+  - Installing guzzlehttp/ringphp (1.1.1): Downloading (100%)
+  - Installing elasticsearch/elasticsearch (v6.7.2): Downloading (100%)
+  - Installing symfony/css-selector (v3.4.47): Downloading (100%)
+  - Installing onoi/shared-resources (0.4.3): Downloading (100%)
+  - Installing wikimedia/textcat (1.3.0): Downloading (100%)
+  - Installing onoi/tesa (0.1.0): Downloading (100%)
+  - Installing onoi/callback-container (2.0.0): Downloading (100%)
+  - Installing onoi/cache (1.2.0): Downloading (100%)
+  - Installing onoi/http-request (1.3.1): Downloading (100%)
+  - Installing onoi/blob-store (1.2.1): Downloading (100%)
+  - Installing onoi/event-dispatcher (1.1.0): Downloading (100%)
+  - Installing onoi/message-reporter (1.4.1): Downloading (100%)
+  - Installing serialization/serialization (4.0.0): Downloading (100%)
+  - Installing data-values/interfaces (0.2.5): Downloading (100%)
+  - Installing data-values/data-values (2.3.0): Downloading (100%)
+  - Installing data-values/validators (0.1.3): Downloading (100%)
+  - Installing data-values/common (0.4.3): Downloading (100%)
+  - Installing param-processor/param-processor (1.10.0): Downloading (100%)
+  - Installing mediawiki/parser-hooks (1.6.1): Downloading (100%)
+  - Installing mediawiki/semantic-media-wiki (3.2.2): Downloading (100%)
+Package guzzlehttp/streams is abandoned, you should avoid using it. No replacement was suggested.
+Package guzzlehttp/ringphp is abandoned, you should avoid using it. No replacement was suggested.
+Writing lock file
+Generating optimized autoload files
+5 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+> ComposerVendorHtaccessCreator::onEvent
+Removing intermediate container 40d7666827a3
+ ---> bfaf35481a03
+Successfully built bfaf35481a03
+Successfully tagged mediawiki_with_smw:latest
