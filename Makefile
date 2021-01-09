@@ -4,10 +4,14 @@ help:
 	@echo "make help"
 	@echo "      this message"
 	@echo "==== Targets outside container ===="
-	@echo "make build_mediawiki"
+	@echo "first run"
+	@echo "    make first_compose"
+	@echo "use a browser to visit localhost:8080 and configure LocalSettings.php"
+	@echo "then run"
+	@echo "    make update_php"
 
 
-# step 1: create a MW iamge that includes SMW extension and dependencies
+# step 1: create a MW image that includes SMW extension and dependencies
 # by running composer within the Dockerfile build process
 build_mediawiki:
 	docker build -t mediawiki_with_smw .
@@ -15,25 +19,25 @@ build_mediawiki:
 # step 2: initialization of MW to create LocalSettings.php
 # for database config, see
 # https://github.com/researcherben/mediawiki-in-docker/blob/main/screenshots_of_wiki/installation_20_dbconnect.png
-first_compose: #build_mediawiki
+first_compose: build_mediawiki
 	rm -rf db images stack_new.yml
 	mkdir db
 	mkdir images
 	cat stack.yml | sed 's/.*\.\/LocalSettings.php.*//g'  > stack_new.yml
-	docker-compose --file stack_new.yml  up --force-recreate
+	docker-compose --file stack_new.yml  up --force-recreate -d
+	/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome http://localhost:8080
 
 # step 3: start the docker-compose but don't visit the wiki yet
 # need to add "enableSemantics" and then run php update
-# caveat: this step does not run in Make yet; the container_id isn't found
+# caveat: is evaluated as Make reads the Makefile, not as the target is executed
 update_php: #first_compose
 	rm stack_new.yml
 	echo "enableSemantics('localhost');" >> LocalSettings.php
 	docker-compose --file stack.yml  up --force-recreate -d
 	$(eval container_id := $(shell docker ps | grep mediawiki_with_smw | cut -d' ' -f1))
 	#container_id=`docker ps | grep mediawiki_with_smw | cut -d' ' -f1`
-	docker exec -it $(container_id) php /var/www/html/maintenance/update.php
-	# in bash, use
 	# docker exec -it ${container_id} php /var/www/html/maintenance/update.php
+	docker exec -it $(container_id) php /var/www/html/maintenance/update.php
 
 # at this point you have a fully install SMW extension! Hooray.
 # changes to content are saved in the /db folder
@@ -69,4 +73,7 @@ list_volumes:
 
 # the following assumes you've passed CONTAINER_ID as an argument to make
 kill_container:
-	docker kill $(CONTAINER_ID)
+	$(eval container_id := $(shell docker ps | grep mediawiki_with_smw | cut -d' ' -f1))
+	docker kill $(container_id)
+	$(eval container_id := $(shell docker ps | grep mariadb | cut -d' ' -f1))
+	docker kill $(container_id)
