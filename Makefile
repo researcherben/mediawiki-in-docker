@@ -29,7 +29,8 @@ update_php: #first_compose
 	rm stack_new.yml
 	echo "enableSemantics('localhost');" >> LocalSettings.php
 	docker-compose --file stack.yml  up --force-recreate -d
-	container_id=`docker ps | grep mediawiki_with_smw | cut -d' ' -f1`
+	$(eval container_id := $(shell docker ps | grep mediawiki_with_smw | cut -d' ' -f1))
+	#container_id=`docker ps | grep mediawiki_with_smw | cut -d' ' -f1`
 	docker exec -it $(container_id) php /var/www/html/maintenance/update.php
 	# in bash, use
 	# docker exec -it ${container_id} php /var/www/html/maintenance/update.php
@@ -41,11 +42,16 @@ update_php: #first_compose
 compose:
 	docker-compose --file stack.yml  up --force-recreate
 
+enter_running_image:
+	$(eval container_id := $(shell docker ps | grep mediawiki_with_smw | cut -d' ' -f1))
+	docker exec -it $(container_id) /bin/bash
+
 # OPTIONAL; not required
 # after exporting the container to an image, you'll
 # need to revise stack.yml to reflect the new image name
 commit_container_to_image:
-	container_id = `docker ps | grep mediawiki_with_smw | cut -d' ' -f1`
+	$(eval container_id := $(shell docker ps | grep mediawiki | cut -d' ' -f1))
+	#container_id = `docker ps | grep mediawiki_with_smw | cut -d' ' -f1`
 	docker commit $(container_id) mediawiki_and_smw_installed
 
 
