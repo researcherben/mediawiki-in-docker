@@ -41,6 +41,7 @@ update_php: #first_compose
 
 # at this point you have a fully install SMW extension! Hooray.
 # changes to content are saved in the /db folder
+# caveat: the SMW installation is in the container but not the image
 
 # all subsequent launches
 compose:
