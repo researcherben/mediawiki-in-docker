@@ -1,9 +1,17 @@
 # yet another MediaWiki in Docker
 
-This repo documents how to get Semantic MediaWiki in Docker, and what to do with SMW.
+This repo documents how to get the Semantic MediaWiki extension running in a Docker-based MediaWiki server, and what to do with SMW.
+
+### concept
 
 If MediaWiki is a graph where pages are nodes and hyperlinks are edges, then
 SMW is a property graph where nodes (pages = entities) can have properties. 
+
+### getting started with this repo
+
+The Makefile documents the steps of using Docker to create a MediaWiki instance that include Semantic MediaWiki.
+
+The Semantic MediaWiki extension is included in the Dockerfile that is used to host MediaWiki. 
 
 # what to do in SMW
 
