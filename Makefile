@@ -17,18 +17,21 @@ build_mediawiki:
 	docker build -t mediawiki_with_smw .
 
 # step 2: initialization of MW to create LocalSettings.php
-# for database config, see
-# https://github.com/researcherben/mediawiki-in-docker/blob/main/screenshots_of_wiki/installation_20_dbconnect.png
 first_compose: build_mediawiki
 	rm -rf db images stack_new.yml
 	mkdir db
 	mkdir images
 	cat stack.yml | sed 's/.*\.\/LocalSettings.php.*//g'  > stack_new.yml
 	docker-compose --file stack_new.yml  up --force-recreate -d
+	# open browser to create LocalSettings.php
+	# for database config, see
+	# https://github.com/researcherben/mediawiki-in-docker/blob/main/screenshots_of_wiki/installation_20_dbconnect.png
 	/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome http://localhost:8080
+	# after downloading LocalSettings.php, close the browser and stop the containers using "docker-compose --file stack_new.yml down"
 
-# step 3: start the docker-compose but don't visit the wiki yet
-# need to add "enableSemantics" and then run php update
+# step 3: 
+# starts the docker-compose but don't visit the wiki yet;
+# The commands below add "enableSemantics" and then runs php update
 # caveat: is evaluated as Make reads the Makefile, not as the target is executed
 update_php: #first_compose
 	rm stack_new.yml
