@@ -31,12 +31,13 @@ what about numeric values with units?
 1. create content on a page that has a numeric property, e.g., `[[Has x_length::43 meters]]`
 1. find the associated property page using http://localhost:8080/index.php/Special:Properties
 1. on the associated property page (e.g., http://localhost:8080/index.php/Property:Has_x_length ) add 
-    
+
+```
     [[Has type::Quantity]]
     [[Corresponds to::1 m, meter, meters]] = 
     [[Corresponds to::3.28084 ft, feet]] = 
     [[Corresponds to::39.3701 in, inches]]
-
+```
 what if the same dimensions are used on multiple properties?
 
 1. create a new template like http://localhost:8080/index.php/Template:length_units
@@ -54,6 +55,13 @@ what about temperatures?
 Once a page has properties, these properties can be queried (using `ask` or `show`) and the results displayed inline.
 
 `{{#show: Main_Page |limit=1 |?Has x_length  }}`
+
+## deleting unused properties
+
+Sometimes users can create properties that are later found to not be useful. Once a property has been dereferenced, it still shows up on <http://localhost:8080/index.php/Special:Properties>. To remove these [outdated properites](https://www.semantic-mediawiki.org/wiki/Help:Outdated_properties), run
+```bash
+docker exec -it ${container_id} php /var/www/html/extensions/SemanticMediaWiki/maintenance/rebuildData.php
+```
 
 ## an example of SMW
 
