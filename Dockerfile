@@ -12,7 +12,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # once Compose is installed, create a file the specifies the desired packages
 # update mediawiki extensions via composer
-RUN echo "{\n\"require\": {\n\"mediawiki/semantic-media-wiki\": \"~3.2\"\n}\n}" > /var/www/html/composer.local.json
+RUN echo "{\n\"require\": {\n\"mediawiki/semantic-media-wiki\": \"~3.2\",\n\"mediawiki/semantic-result-formats\": \"~3.1\"\n}\n}" > /var/www/html/composer.local.json
 # then run Composer to get the package
 RUN composer update --no-dev
 
