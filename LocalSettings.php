@@ -130,6 +130,14 @@ wfLoadSkin( 'Vector' );
 # Add more configuration options below.
 
 # require_once "/var/www/html/extensions/SemanticMediaWiki/SemanticMediaWiki.php";
-#enableSemantics( 'localhost' );
+enableSemantics( 'localhost' );
 
 # $wgGroupPermissions['smwadministrator']['smw-admin'] = true;
+
+# https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats
+# https://github.com/SemanticMediaWiki/SemanticResultFormats/blob/master/docs/INSTALL.md
+wfLoadExtension( 'SemanticResultFormats' );
+ 
+# suppress error messages caused by SMW not being compatible with most recent MediaWiki
+error_reporting( 0 );
+
