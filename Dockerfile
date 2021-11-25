@@ -5,7 +5,20 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install zip
 
-# install PHP package manager "Compose"
+# dependencies:
+# * SMW requires composer
+# * using "format=sum" in a SMW query requires "semantic-result-formats" extension
+# * using "#expr" in MediaWiki requires ParserFunctions
+
+
+
+# ParserFunctions is not associated with SMW
+COPY mediawiki-extensions-ParserFunctions-master /var/www/html/extensions/ParserFunctions/
+# after creating LocalSettings.php, add
+# wfLoadExtension( 'ParserFunctions' );
+# to the end of LocalSettings
+
+# install PHP package manager "Composer"
 # requires v1 instead of v2 for compatibility with SMW
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.16
 #RUN mv composer.phar /usr/local/bin/composer
