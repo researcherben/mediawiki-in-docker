@@ -84,7 +84,10 @@ $wgPingback = false;
 
 ## If you use ImageMagick (or any other shell command) on a
 ## Linux server, this will need to be set to the name of an
-## available UTF-8 locale
+## available UTF-8 locale. This should ideally be set to an English
+## language locale so that the behaviour of C library functions will
+## be consistent with typical installations. Use $wgLanguageCode to
+## localise the wiki.
 $wgShellLocale = "C.UTF-8";
 
 ## Set $wgCacheDirectory to a writable directory on the web server
@@ -134,10 +137,17 @@ enableSemantics( 'localhost' );
 
 # $wgGroupPermissions['smwadministrator']['smw-admin'] = true;
 
+# needed for "format=sum" in SMW queries
 # https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats
 # https://github.com/SemanticMediaWiki/SemanticResultFormats/blob/master/docs/INSTALL.md
 wfLoadExtension( 'SemanticResultFormats' );
- 
+
+# needed for "#expr" in MediaWiki
+# https://github.com/wikimedia/mediawiki-extensions-ParserFunctions
+# https://www.mediawiki.org/wiki/Extension:ParserFunctions
+# https://meta.wikimedia.org/wiki/Help:Calculation
+wfLoadExtension( 'ParserFunctions' );
+
 # suppress error messages caused by SMW not being compatible with most recent MediaWiki
 error_reporting( 0 );
 
